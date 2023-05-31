@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 
 @RestController
@@ -29,11 +31,11 @@ public class EmployeClientConroller {
      * @return ResponseEntity containing the list of employees, or an appropriate error response
      */
     @GetMapping("/getallemployee")
-    public ResponseEntity<List<Employee>> getAllEmployee(OAuth2AuthenticationToken token, @AuthenticationPrincipal(expression = "idToken")OidcIdToken idToken) {
+    public Flux<Employee> getAllEmployee(OAuth2AuthenticationToken token, @AuthenticationPrincipal(expression = "idToken")OidcIdToken idToken) {
         System.out.println(idToken.getTokenValue());
         String tokenNew = (String) idToken.getTokenValue();
         System.out.println(tokenNew);
-        return ResponseEntity.ok(employeeService.getAllEmployees(tokenNew));
+        return employeeService.getAllEmployees(tokenNew);
     }
 
     /**
